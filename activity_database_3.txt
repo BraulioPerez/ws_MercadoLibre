@@ -1,0 +1,54 @@
+Design phases. 
+1. Data requirements
+First point, the bank is organized into branches. each branch is located in a particular city and is identified by a unique name, the bank
+monitors the assets of each branch.
+
+Second, bank costumers are identified by the costumer ID values, the bank stores each costumers name and street and city where the costumer lives
+costumers may have accounts and can take out lones a costumer may be associated with a particular banker who may add as a loan officer
+or personal banker for that costumer.
+
+Third, bank employes are identified by their employe ID values, the bank administration stores the name and 
+thlephone number of each employe, the names of the employes denpendance and the employe ID number of the employes manager
+the bank also keeps track of the employes start day and length of the employe.
+
+Number four, the bank offers two types of accounts savings and checking accounts. Accounts can be held by more than one costumer and
+a costumer can have more than one account. Each account is assign a unique account number the bank mantains a record of each account balance
+and the most present date on which the account was accessed by each costumer holding account. In addition each savings account
+has an interest rate and overdraft and recorded for each checking account.
+
+Five, a loan originates at a particular branch and can be held by one or more costumers, a loan is identified by a unique loan number
+for each loan the bank keeps track of the loan amount and loan payments, althoug a loan payment number does not unikely identifya particular
+payment among those for all the banks loans. A payment number does identify a particular payment for specific loan.
+
+The date and amount are recorded for each payment.
+ 
+2. Entity sets identification
+Branch
+Costumers
+Employes
+Saving account
+Checking account
+Loan
+Loan payment
+
+3. Atributes
+City, name and assets
+Id, name, street, city, banker
+Id, name, telephone, emplyes denpendance name, start day, manager, employment lane, salary, manager
+Account number, balance, saving acount(interest rate), checking(overdraft)
+loan number, amount, originating branch
+Loan payment number, payment date and payment amount.
+
+4. Relationship sets designation
+Prestamista - costumer y loan - many to many.
+Loan payment - loan y payment - one to many
+loan-branch - brach y loan - one to many. (ESTA RELACION VA A SUSTITUIR EL ATRIBUTO ORIGINATES DE LOAN)
+depositor (acces day) - costumer y account (many to many)
+costumer-banker - atributo type - (one to many), esto sustitye a el atributo del costumer
+works for- manager and worker, cardinalidad - (employe works for only one manager) - one to many, esta relacion reemplaza al atributo manager de 
+empleado.
+
+4. ER DIAGRAM.
+
+
+
