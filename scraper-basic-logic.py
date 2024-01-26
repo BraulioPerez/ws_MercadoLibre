@@ -29,7 +29,7 @@ def extract_item_urls(search_url:str):
         print(f"Error {e}")
     return href_values
 
-    
+
 
 
 if __name__ == '__main__':
