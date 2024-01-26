@@ -1,0 +1,1 @@
+SELECT * FROM ws_mercadolibre.productdata;
