@@ -101,14 +101,17 @@ def extract_item_urls(search_url:str):
 
 if __name__ == '__main__':
     start = time.time()
+    # Test 
     # items = [
     #     'television 60 pulgadas', "control de xbox"
     # ]
 
+    #lista de item con pocas pag para que funcione rápido
     items = ["television 60 pulgadas"]
+
+    #se aplican las funciones con la funcion map para que sea más rápido y evitar loops sobre loops sobre loops
     urls = list(map(create_search_link, items))
     all_urls = list(map(extract_item_urls, urls))
     all_item_info = list(map(get_information, all_urls))
-    print(len(all_item_info))
     end = time.time()
-    print(f"el programa tardó {(end-start)//60} minutos")
+    print(f"el programa tardó {(end-start)} minutos")
