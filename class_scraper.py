@@ -6,6 +6,12 @@ class ScraperLibre():
     def __init__(self, url):
         self.url = url
 
+    def modify_url(self):
+        # input = base url
+        # function: hacer que el url sea modificable con el codigo
+        # output = url modificado en forma de str
+        None
+
     def increase_page(self):
         # input = link de búsqueda
         # funcion: aumenta en 50 el valor de la busqueda
