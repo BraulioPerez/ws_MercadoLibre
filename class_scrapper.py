@@ -1,5 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+import json
+import os
+import time
+import re
 
 
 
@@ -7,120 +11,160 @@ class ScraperLibre:
     def __init__(self, url):
         self.url = url
         self.title = None
-        self.prices_list = None
-        self.rate = None
+        self.price_before = None
+        self.price_now = None
+        self.rating = None
         self.urls_img = None
         self.provider = None
         self.description = None
         
 
-    def increase_page(self):
+    def increase_page(self, search_url):
         # input = link de búsqueda
         # funcion: aumenta en 50 el valor de la busqueda
         # output = link de busqueda modificado
-        None
+        print("Increasing page")
+
+        beginning, ending = search_url.split("_", 1)
+        pattern = r'\d+'
+        modified_ending = re.sub(pattern, lambda match: str(int(match.group()) + 50), ending)
+
+        print("Page increased")
+        return beginning + "_" + modified_ending
+
 
     def title_scrap(self, url_objeto):
         # input = url_objeto
-        res = requests.get(url_objeto)
-        soup = BeautifulSoup(res.text, "html.parser")
-        
-        title = soup.select("div.ui-pdp-header__title-container h1")[0].text
-        print(title)
         # funcion = extraer titulo de objeto
         # output = string del titulo
-        self.title = title
+        print("Scraping title")
+
+        res = requests.get(url_objeto)
+        soup = BeautifulSoup(res.text, "html.parser")
+        title = soup.select("div.ui-pdp-header__title-container h1")[0].text
+        
+        print(f"Title scraped: {title}")
+        return title
+
 
     def price_scrap(self, url_objeto):
         # input = url_objeto
+        # funcion = extraer precio de objeto
+        # output = string del precio
+        print("Scraping price")
+
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
-        # funcion = extraer precio de objeto
         prices = soup.select("div.ui-pdp-price__main-container span.andes-money-amount__fraction")
-        print(len(prices))
         if len(prices) >= 2:
             price_before = prices[0].text
             price_current = prices[1].text
-            prices_list = [price_before, price_current]            
+            price_credit = soup.select_one("div.ui-pdp-price__main-container div.ui-pdp-price__subtitles span.andes-money-amount__fraction")
+            if prices[1] == price_credit:
+                price_current = price_before
+                price_before = None
+            prices_list = [price_before, price_current]
+            print(f"Prices scraped {prices_list}")
+        elif len(prices) ==0:
+            prices_list = None
+            print(f"Prices scraped {prices_list}")            
         else:
             price_current = prices[0].text
             price_before = None
             prices_list = [price_before, price_current]
-        
-        print(prices_list)
-        # output = string del precio
-        self.prices_list = prices_list
+            print(f"Prices scraped {prices_list}")
+            
+        return prices_list
     
+
     def rating_scrap(self, url_objeto):
         # input = url_objeto
+        # funcion = extraer rating de objeto
+        # output = string del rating
+        print("Scraping rating")
+
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
-        # funcion = extraer rating de objeto
         review_div = soup.select("div[class*='ui-review-capability__rating'] p")
         if len(review_div) != 0:
             rate = review_div[0].text
         elif len(review_div) == 0:
             rate = soup.select_one("div.ui-pdp-header div[class*='ui-pdp-header__info'] a[class*='ui-pdp-review__label'] span.ui-pdp-review__rating")
-            print(rate)
-            
-        print(review_div)
-        print(rate)
-        # output = string del rating
-        self.rate = rate
-    
+        else:
+            rate = None
+
+        print(f"Rating scraped {rate}")
+        return rate
+
+
     def images_scrap(self, url_objeto):
         # input = url_objeto
+        # funcion = extraer url de imagenes de objeto
+        # output = lista de urls
+        print("Scraping images")
+
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
-        # funcion = extraer url de imagenes de objeto
-        #images_list = soup.select("div.ui-pdp-gallery__column span figure.ui-pdp-gallery__figure img")
         images_list = soup.select("div.ui-pdp-gallery__column span.ui-pdp-gallery__wrapper label.ui-pdp-gallery__label div[role='presentation'] div.ui-pdp-thumbnail__picture img.ui-pdp-image")
         urls_img = []
         for img in images_list:
-            url = img.get('srcset')
+            url = img.get('data-src')
             urls_img.append(url)   
-            
-        print(urls_img)
-        # output = lista de urls
-        self.urls_img = urls_img
+        
+        print(f"Images scraped: {urls_img}")
+        return urls_img
     
     
-    def provider_scarp(self, url_objeto):
+    def provider_scrap(self, url_objeto):
         # input = url_objeto
+        # funcion = extraer titulo de proveedor del objeto
+        # output = string del titulo del proveedor
+        print("Scraping provider")
+
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
-        # funcion = extraer titulo de proveedor del objeto
         provider_list = soup.select("div.ui-seller-info div.ui-pdp-seller__header__title")
         print(provider_list)
         if len(provider_list) == 0:
             provider_unique = soup.select_one("div.ui-pdp-seller__header div.ui-pdp-seller__header__info-container div.ui-pdp-seller__header__info-container__title span[class*='ui-pdp-color--BLUE']")
             provider = provider_unique.text
         else:
-            provider = provider_list[0].text
-            
-        
-        
-        print(provider)
-        # output = string del titulo del proveedor
-        self.provider = provider
-    
+            provider = provider_list[0].text 
+
+        print(f"Provider scraped {provider}")
+        return provider
+
+
     def description_scrap(self, url_objeto):
         # input = url_objeto
+        # funcion = extraer Descripcion de objeto
+        # output = string de la descripcion
+        print("Scraping  Description")
+
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")        
-        # funcion = extraer Descripcion de objeto
         description_list = soup.select("div[class*='ui-pdp-container__row'] div.ui-pdp-description p.ui-pdp-description__content")
         if len(description_list) == 0:
             description = None
         else:
             description = description_list[0].text
-        print(description)
-        # output = string de la descripcion
-        self.description = description
-    
+
+        print(f"Description scraped {description}")
+        return description
+
+
     def data_scrap(self, url_objeto):
-        # Usar todas las previas "xxxx_scrap" para extraer la info del producto
-        None
+        result = {"title": self.title_scrap(url_objeto),
+                    "prices" : self.price_scrap(url_objeto),
+                    "images": self.images_scrap(url_objeto),
+                    "rating": self.rating_scrap(url_objeto),
+                    "provider": self.provider_scrap(url_objeto),
+                    "description": self.description_scrap(url_objeto) 
+                    }
+        with open("result.json", "w") as outfile: 
+            json.dump(result, outfile)
+        return result
+
 
     def scrap_all(self):
         # La típica funcion de scrapear los links de busqueda del objeto
@@ -129,17 +173,33 @@ class ScraperLibre:
             # se mueve a la siguiente página
                 # El ciclo se rompe cuando ya no encuentra objetos que scrapear
         # return json con toda la info
-        None
+        url_list = []
+        page = requests.get(self.url)
+        soup = BeautifulSoup(page.text, "html.parser")
+        selector = "a[class*=ui-search-item__group__element][class*=ui-search-link__title-card][class*=ui-search-link]"
+        elements = soup.select(selector)
+
+        all_data = {}
+        for elm in elements:
+            url = elm.get("href")
+            print(url)
+            all_data[url] = self.data_scrap(url)
+            print(all_data[url])
+        print(all_data)
+
+        return all_data
+
+
+    def debug_write_soup_to_file(self, url_objeto, file_name):
+        res = requests.get(url_objeto)
+        soup = BeautifulSoup(res.text, "html.parser")
+
+        if not os.path.isfile(file_name):
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(str(soup))
     
 
-url = "https://www.mercadolibre.com.mx/escurridor-alto-ajustable-doble-tarja-para-platos-moda-cm-color-negro/p/MLM22619015#polycard_client=recommendations_home_navigation-recommendations&reco_backend=machinalis-homes-univb&reco_client=home_navigation-recommendations&reco_item_pos=4&reco_backend_type=function&reco_id=7a4ccfd2-bc47-4336-ab65-452b41bbeb27&wid=MLM2014535193&sid=recos&c_id=/home/navigation-recommendations/element&c_uid=860e4efd-4c3c-459a-99af-e98f3db8c91a"
-object = ScraperLibre(url)
-url2 = "https://articulo.mercadolibre.com.mx/MLM-1763817956-kit-mantenimiento-pc-aire-alcohol-pasta-termica-3g-_JM#polycard_client=recommendations_home_second-best-navigation-trend-recommendations&reco_backend=machinalis-homes-univb&reco_client=home_second-best-navigation-trend-recommendations&reco_item_pos=3&reco_backend_type=function&reco_id=fb570432-c61a-45d9-aa5e-3a14c9d58d30&c_id=/home/second-best-navigation-trend-recommendations/element&c_uid=2654a610-4c2f-4b18-864f-4e723dc901a6"
-object.title_scrap(url2)
-object.price_scrap(url2)
-object.rating_scrap(url2)
-object.images_scrap(url2)
-object.provider_scarp(url2)
-object.description_scrap(url2)
+obj = ScraperLibre("url") #the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
 
-    
+# Todays project due only asks to return the data from one item, so the method to use is data_scrap
+print(obj.data_scrap("https://www.mercadolibre.com.mx/control-joystick-inalambrico-microsoft-xbox-wireless-control-color-blanco/p/MLM16268161?pdp_filters=category:MLM188689#searchVariation=MLM16268161&position=2&search_layout=stack&type=product&tracking_id=ec92e2c0-792e-47af-9736-36eee7180120"))
