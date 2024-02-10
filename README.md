@@ -1,7 +1,7 @@
 # ws_MercadoLibre
 This file describes the functions/methods used in the python script for a Web Scraper.
 
-__init__():
+ - __init__():
  - - This is the special method which gets called when an object of a class is instantiated. This method is used to initialize the attributes of an object.
 
  - increase_page(search_url):

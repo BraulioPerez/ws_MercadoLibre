@@ -124,7 +124,6 @@ class ScraperLibre:
         res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         provider_list = soup.select("div.ui-seller-info div.ui-pdp-seller__header__title")
-        print(provider_list)
         if len(provider_list) == 0:
             provider_unique = soup.select_one("div.ui-pdp-seller__header div.ui-pdp-seller__header__info-container div.ui-pdp-seller__header__info-container__title span[class*='ui-pdp-color--BLUE']")
             provider = provider_unique.text
@@ -200,6 +199,7 @@ class ScraperLibre:
     
 
 obj = ScraperLibre("url") #the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
+url = "https://articulo.mercadolibre.com.mx/MLM-1952179402-pc-gamer-ryzen-5600g-32gb-ram-1tb-ssd-graficos-radeon-7-wifi-_JM#position=2&search_layout=stack&type=item&tracking_id=a17e972d-e8fc-4a4c-924e-effb51bdbf30"
 
 # Todays project due only asks to return the data from one item, so the method to use is data_scrap
-print(obj.data_scrap("https://www.mercadolibre.com.mx/xiaomi-pocophone-poco-m5s-dual-sim-256-gb-gris-8-gb-ram/p/MLM23428712?pdp_filters=deal:MLM779363-1&hide_psmb=true#promotion_type=DEAL_OF_THE_DAY&searchVariation=MLM23428712&deal_print_id=7be11463-6bd2-4151-a138-ec4a138e0777&position=12&search_layout=grid&type=product&tracking_id=aac8c045-4c04-4b12-92c8-cd9699bd0674&deal_print_id=933c9611-1c40-418d-8d8a-1236abd095f7&promotion_type=DEAL_OF_THE_DAY"))
+print(obj.data_scrap(url))
