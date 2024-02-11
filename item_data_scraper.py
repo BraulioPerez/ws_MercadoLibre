@@ -7,39 +7,18 @@ import re
 
 
 
-class ScraperLibre:
+class ItemDataScraper:
     def __init__(self, url):
         self.url = url
         self.title = None
-        self.price_before = None
-        self.price_now = None
-        self.rating = None
-        self.urls_img = None
-        self.provider = None
-        self.description = None
-        
-
-    def increase_page(self, search_url):
-        # input = link de búsqueda
-        # funcion: aumenta en 50 el valor de la busqueda
-        # output = link de busqueda modificado
-        print("Increasing page")
-
-        beginning, ending = search_url.split("_", 1)
-        pattern = r'\d+'
-        modified_ending = re.sub(pattern, lambda match: str(int(match.group()) + 50), ending)
-
-        print("Page increased")
-        return beginning + "_" + modified_ending
 
 
-    def title_scrap(self, url_objeto):
+    def title_scrap(self, res):
         # input = url_objeto
         # funcion = extraer titulo de objeto
         # output = string del titulo
         print("Scraping title")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         title = soup.select("div.ui-pdp-header__title-container h1")[0].text
         
@@ -47,13 +26,12 @@ class ScraperLibre:
         return title
 
 
-    def price_scrap(self, url_objeto):
+    def price_scrap(self, res):
         # input = url_objeto
         # funcion = extraer precio de objeto
         # output = string del precio
         print("Scraping price")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         prices = soup.select("div.ui-pdp-price__main-container span.andes-money-amount__fraction")
         if len(prices) >= 2:
@@ -77,13 +55,12 @@ class ScraperLibre:
         return prices_list
     
 
-    def rating_scrap(self, url_objeto):
+    def rating_scrap(self, res):
         # input = url_objeto
         # funcion = extraer rating de objeto
         # output = string del rating
         print("Scraping rating")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         review_div = soup.select("div[class*='ui-review-capability__rating'] p")
         if len(review_div) != 0:
@@ -97,13 +74,12 @@ class ScraperLibre:
         return rate
 
 
-    def images_scrap(self, url_objeto):
+    def images_scrap(self, res):
         # input = url_objeto
         # funcion = extraer url de imagenes de objeto
         # output = lista de urls
         print("Scraping images")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         images_list = soup.select("div.ui-pdp-gallery__column span.ui-pdp-gallery__wrapper label.ui-pdp-gallery__label div[role='presentation'] div.ui-pdp-thumbnail__picture img.ui-pdp-image")
         urls_img = []
@@ -115,13 +91,12 @@ class ScraperLibre:
         return urls_img
     
     
-    def provider_scrap(self, url_objeto):
+    def provider_scrap(self, res):
         # input = url_objeto
         # funcion = extraer titulo de proveedor del objeto
         # output = string del titulo del proveedor
         print("Scraping provider")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")
         provider_list = soup.select("div.ui-seller-info div.ui-pdp-seller__header__title")
         if len(provider_list) == 0:
@@ -134,13 +109,12 @@ class ScraperLibre:
         return provider
 
 
-    def description_scrap(self, url_objeto):
+    def description_scrap(self, res):
         # input = url_objeto
         # funcion = extraer Descripcion de objeto
         # output = string de la descripcion
         print("Scraping  Description")
 
-        res = requests.get(url_objeto)
         soup = BeautifulSoup(res.text, "html.parser")        
         description_list = soup.select("div[class*='ui-pdp-container__row'] div.ui-pdp-description p.ui-pdp-description__content")
         if len(description_list) == 0:
@@ -153,16 +127,21 @@ class ScraperLibre:
 
 
     def data_scrap(self, url_objeto):
-        title = self.title_scrap(url_objeto)
-        result = {"title": title,
-                    "prices" : self.price_scrap(url_objeto),
-                    "images": self.images_scrap(url_objeto),
-                    "rating": self.rating_scrap(url_objeto),
-                    "provider": self.provider_scrap(url_objeto),
-                    "description": self.description_scrap(url_objeto) 
-                    }
-        with open(f"{title}.json", "w") as outfile: 
-            json.dump(result, outfile)
+        
+        with requests.Session() as session:
+            ses = session.get(url_objeto)
+            title = self.title_scrap(ses)
+
+            result = {"title": title,
+                        "prices" : self.price_scrap(ses),
+                        "images": self.images_scrap(ses),
+                        "rating": self.rating_scrap(ses),
+                        "provider": self.provider_scrap(ses),
+                        "description": self.description_scrap(ses) 
+                        }
+            with open(f"{title}.json", "w") as outfile: 
+                json.dump(result, outfile)
+        
         return result
 
 
@@ -174,8 +153,8 @@ class ScraperLibre:
             with open(file_name, "w", encoding="utf-8") as file:
                 file.write(str(soup))
     
-
-obj = ScraperLibre("https://listado.mercadolibre.com.mx/pc-gamer#D[A:pc%20gamer]") #the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
+#the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
+obj = ScraperLibre("https://listado.mercadolibre.com.mx/pc-gamer#D[A:pc%20gamer]")
 
 # Todays project due only asks to return the data from one item, so the method to use is data_scrap
 obj.data_scrap("https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b")
