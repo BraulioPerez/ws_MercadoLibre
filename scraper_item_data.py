@@ -153,40 +153,17 @@ class ScraperLibre:
 
 
     def data_scrap(self, url_objeto):
-        result = {"title": self.title_scrap(url_objeto),
+        title = self.title_scrap(url_objeto)
+        result = {"title": title,
                     "prices" : self.price_scrap(url_objeto),
                     "images": self.images_scrap(url_objeto),
                     "rating": self.rating_scrap(url_objeto),
                     "provider": self.provider_scrap(url_objeto),
                     "description": self.description_scrap(url_objeto) 
                     }
-        with open("result.json", "w") as outfile: 
+        with open(f"{title}.json", "w") as outfile: 
             json.dump(result, outfile)
         return result
-
-
-    def scrap_all(self):
-        # La típica funcion de scrapear los links de busqueda del objeto
-            # Aparte de sacar los links de búsqueda de cada objeto, debe entrar y scrapear los datos de cada objeto en forma de diccionarios
-            # añade el diccionario a un json grande
-            # se mueve a la siguiente página
-                # El ciclo se rompe cuando ya no encuentra objetos que scrapear
-        # return json con toda la info
-        url_list = []
-        page = requests.get(self.url)
-        soup = BeautifulSoup(page.text, "html.parser")
-        selector = "a[class*=ui-search-item__group__element][class*=ui-search-link__title-card][class*=ui-search-link]"
-        elements = soup.select(selector)
-
-        all_data = {}
-        for elm in elements:
-            url = elm.get("href")
-            print(url)
-            all_data[url] = self.data_scrap(url)
-            print(all_data[url])
-        print(all_data)
-
-        return all_data
 
 
     def debug_write_soup_to_file(self, url_objeto, file_name):
@@ -198,8 +175,7 @@ class ScraperLibre:
                 file.write(str(soup))
     
 
-obj = ScraperLibre("url") #the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
-url = "https://articulo.mercadolibre.com.mx/MLM-1952179402-pc-gamer-ryzen-5600g-32gb-ram-1tb-ssd-graficos-radeon-7-wifi-_JM#position=2&search_layout=stack&type=item&tracking_id=a17e972d-e8fc-4a4c-924e-effb51bdbf30"
+obj = ScraperLibre("https://listado.mercadolibre.com.mx/pc-gamer#D[A:pc%20gamer]") #the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
 
 # Todays project due only asks to return the data from one item, so the method to use is data_scrap
-print(obj.data_scrap(url))
+obj.data_scrap("https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b")
