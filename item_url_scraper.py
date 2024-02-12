@@ -1,4 +1,9 @@
-
+import requests
+from bs4 import BeautifulSoup
+import json
+import os
+import time
+import re
 
 
 
@@ -18,3 +23,6 @@ class ItemUrlScraper:
 
         print("Page increased")
         return beginning + "_" + modified_ending
+
+    def get_item_urls(self, search_url):
+        None
