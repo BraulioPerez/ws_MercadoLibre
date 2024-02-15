@@ -126,10 +126,12 @@ class ItemDataScraper:
         return description
 
 
-    def data_scrap(self, url_objeto):
-        
+    def data_scrap(self):
         with requests.Session() as session:
-            ses = session.get(url_objeto)
+            start = time.time() 
+            ses = session.get(self.url)
+            end = time.time() 
+            print(f"{(end-start)} segundos en el request")
             title = self.title_scrap(ses)
 
             result = {"title": title,
@@ -139,8 +141,8 @@ class ItemDataScraper:
                         "provider": self.provider_scrap(ses),
                         "description": self.description_scrap(ses) 
                         }
-            with open(f"{title}.json", "w") as outfile: 
-                json.dump(result, outfile)
+            # with open(f"{title}.json", "w") as outfile: 
+            #     json.dump(result, outfile)
         
         return result
 
@@ -153,8 +155,13 @@ class ItemDataScraper:
             with open(file_name, "w", encoding="utf-8") as file:
                 file.write(str(soup))
     
-#the class is planned to scrap multiple pages of a website so it is initialized with a string symbolizing a url
-obj = ScraperLibre("https://listado.mercadolibre.com.mx/pc-gamer#D[A:pc%20gamer]")
+# solo se asigna el url a una variable para que sea mas facil de manipular y testear
+# se crea el onjeto
+# #se ejecuta el metodo data_scrap en el objeto calculando el tiempo que tarda y se imprime el tiempo total de ejecucion
+url = "https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b"
+start = time.time() 
+obj = ItemDataScraper(url)
 
-# Todays project due only asks to return the data from one item, so the method to use is data_scrap
-obj.data_scrap("https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b")
+obj.data_scrap()
+end = time.time()
+print(f"tardó {(end-start)} segundos")
