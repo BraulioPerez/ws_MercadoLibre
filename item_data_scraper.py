@@ -11,28 +11,32 @@ class ItemDataScraper:
     def __init__(self, url):
         self.url = url
         self.title = None
+        start = time.time()
+        with requests.Session() as session:
+            self.session = session.get(self.url)
+        print(f"tiempo de request {(time.time() - start)} seconds")
 
 
-    def title_scrap(self, res):
+    def title_scrap(self):
         # input = url_objeto
         # funcion = extraer titulo de objeto
         # output = string del titulo
         print("Scraping title")
 
-        soup = BeautifulSoup(res.text, "html.parser")
+        soup = BeautifulSoup(self.session.text, "html.parser")
         title = soup.select("div.ui-pdp-header__title-container h1")[0].text
         
         print(f"Title scraped: {title}")
         return title
 
 
-    def price_scrap(self, res):
+    def price_scrap(self):
         # input = url_objeto
         # funcion = extraer precio de objeto
         # output = string del precio
         print("Scraping price")
 
-        soup = BeautifulSoup(res.text, "html.parser")
+        soup = BeautifulSoup(self.session.text, "html.parser")
         prices = soup.select("div.ui-pdp-price__main-container span.andes-money-amount__fraction")
         if len(prices) >= 2:
             price_before = prices[0].text
@@ -54,14 +58,13 @@ class ItemDataScraper:
             
         return prices_list
     
-
-    def rating_scrap(self, res):
+    def rating_scrap(self):
         # input = url_objeto
         # funcion = extraer rating de objeto
         # output = string del rating
         print("Scraping rating")
 
-        soup = BeautifulSoup(res.text, "html.parser")
+        soup = BeautifulSoup(self.session.text, "html.parser")
         review_div = soup.select("div[class*='ui-review-capability__rating'] p")
         if len(review_div) != 0:
             rate = review_div[0].text
@@ -74,13 +77,13 @@ class ItemDataScraper:
         return rate
 
 
-    def images_scrap(self, res):
+    def images_scrap(self):
         # input = url_objeto
         # funcion = extraer url de imagenes de objeto
         # output = lista de urls
         print("Scraping images")
 
-        soup = BeautifulSoup(res.text, "html.parser")
+        soup = BeautifulSoup(self.session.text, "html.parser")
         images_list = soup.select("div.ui-pdp-gallery__column span.ui-pdp-gallery__wrapper label.ui-pdp-gallery__label div[role='presentation'] div.ui-pdp-thumbnail__picture img.ui-pdp-image")
         urls_img = []
         for img in images_list:
@@ -91,31 +94,36 @@ class ItemDataScraper:
         return urls_img
     
     
-    def provider_scrap(self, res):
-        # input = url_objeto
-        # funcion = extraer titulo de proveedor del objeto
-        # output = string del titulo del proveedor
+    def provider_scrap(self):
+    # input = url_objeto
+    # funcion = extraer titulo de proveedor del objeto
+    # output = string del titulo del proveedor
         print("Scraping provider")
 
-        soup = BeautifulSoup(res.text, "html.parser")
-        provider_list = soup.select("div.ui-seller-info div.ui-pdp-seller__header__title")
-        if len(provider_list) == 0:
-            provider_unique = soup.select_one("div.ui-pdp-seller__header div.ui-pdp-seller__header__info-container div.ui-pdp-seller__header__info-container__title span[class*='ui-pdp-color--BLUE']")
-            provider = provider_unique.text
-        else:
-            provider = provider_list[0].text 
+        try:
+            soup = BeautifulSoup(self.session.text, "html.parser")
+            provider_list = soup.select("div.ui-seller-info div.ui-pdp-seller__header__title")
+            if len(provider_list) == 0:
+                provider_unique = soup.select_one("div.ui-pdp-seller__header div.ui-pdp-seller__header__info-container div.ui-pdp-seller__header__info-container__title span[class*='ui-pdp-color--BLUE']")
+                provider = provider_unique.text if provider_unique else "No provider found"
+            else:
+                provider = provider_list[0].text 
 
-        print(f"Provider scraped {provider}")
-        return provider
+            print(f"Provider scraped {provider}")
+            return provider
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
 
-    def description_scrap(self, res):
+
+    def description_scrap(self):
         # input = url_objeto
         # funcion = extraer Descripcion de objeto
         # output = string de la descripcion
         print("Scraping  Description")
 
-        soup = BeautifulSoup(res.text, "html.parser")        
+        soup = BeautifulSoup(self.session.text, "html.parser")        
         description_list = soup.select("div[class*='ui-pdp-container__row'] div.ui-pdp-description p.ui-pdp-description__content")
         if len(description_list) == 0:
             description = None
@@ -127,22 +135,16 @@ class ItemDataScraper:
 
 
     def data_scrap(self):
-        with requests.Session() as session:
-            start = time.time() 
-            ses = session.get(self.url)
-            end = time.time() 
-            print(f"{(end-start)} segundos en el request")
-            title = self.title_scrap(ses)
-
-            result = {"title": title,
-                        "prices" : self.price_scrap(ses),
-                        "images": self.images_scrap(ses),
-                        "rating": self.rating_scrap(ses),
-                        "provider": self.provider_scrap(ses),
-                        "description": self.description_scrap(ses) 
-                        }
-            # with open(f"{title}.json", "w") as outfile: 
-            #     json.dump(result, outfile)
+        title = self.title_scrap()
+        result = {"title": title,
+                    "prices" : self.price_scrap(),
+                    "images": self.images_scrap(),
+                    "rating": self.rating_scrap(),
+                    "provider": self.provider_scrap(),
+                    "description": self.description_scrap() 
+                    }
+        # with open(f"{title}.json", "w") as outfile: 
+        #     json.dump(result, outfile)
         
         return result
 
