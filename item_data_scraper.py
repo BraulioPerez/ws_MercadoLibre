@@ -161,9 +161,9 @@ class ItemDataScraper:
 # se crea el onjeto
 # #se ejecuta el metodo data_scrap en el objeto calculando el tiempo que tarda y se imprime el tiempo total de ejecucion
 url = "https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b"
-start = time.time() 
-obj = ItemDataScraper(url)
 
+obj = ItemDataScraper(url)
+start = time.time() 
 obj.data_scrap()
 end = time.time()
 print(f"tardó {(end-start)} segundos")
