@@ -29,6 +29,7 @@ def get_data_object():
             print(f"the exception was: {e}")
             return None
 
+
 @app.route('/search')
 def get_info_pages():
     pass
