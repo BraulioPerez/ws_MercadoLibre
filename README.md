@@ -142,7 +142,6 @@ For debugging or modification of the program we share with you the functionality
 ### Collaborators
 
 
-
 * [Francisco Chan]([https://github.com/Frank3040](https://github.com/Frank3040))
 * [Braulio Pérez]([https://github.com/BraulioPerez](https://github.com/BraulioPerez))
     * [Youtube]([https://www.youtube.com/@BraulioPerez-Code](https://www.youtube.com/@BraulioPerez-Code))
