@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import json
 import os
-import time
 
 
 
@@ -10,7 +8,6 @@ class ItemDataScraper:
     def __init__(self, url):
         self.url = url
         self.title = None
-        start = time.time()
         with requests.Session() as session:
             self.session = session.get(self.url)
 
@@ -118,6 +115,8 @@ class ItemDataScraper:
 
 
     def data_scrap(self):
+        #No input
+        # Returns information in json format
         title = self.title_scrap()
         result = {"title": title,
                     "prices" : self.price_scrap(),
