@@ -8,8 +8,6 @@ ws_MercadoLibre is a Python-based web scraping tool designed specifically for ex
 
 ### **Key Features**
 
-
-
 * Customizable Data Extraction: Specify the item you're interested in, and ws_MercadoLibre will retrieve the relevant data for you.
 * Python-based Scraping: Utilizes popular libraries such as BeautifulSoup4, Requests, and Flask for efficient and accurate scraping.
 * Dockerized Environment: Offers seamless deployment and scalability with Docker integration.
@@ -18,10 +16,8 @@ ws_MercadoLibre is a Python-based web scraping tool designed specifically for ex
 
 ### **Technologies Used**
 
-
-
-* Python: Versatile and easy to learn programming language.
-    * Modules:
+- **Python**: Versatile and easy to learn programming language.
+    - **Modules**:
 
          - **BeautifulSoup4**: Python library to extract data from HTML and XML.
 
@@ -31,12 +27,9 @@ ws_MercadoLibre is a Python-based web scraping tool designed specifically for ex
          
          - **httpio**: Python library that allows you to access files served over HTTP as file-like objects
 
-* Docker: Platform for creating, deploying and running containerized applications.
-
+- **Docker**: Platform for creating, deploying and running containerized applications.
 
 ### **Installation**
-
-
 
 * Clone the repository.
 * Open Docker and make sure that the Docker engine has started.
@@ -46,35 +39,31 @@ ws_MercadoLibre is a Python-based web scraping tool designed specifically for ex
     * `docker compose up --build`
 
 * Now you can do requests to the api by sending a json with the following format:
-    * { “url” : https://www.your_mercadolibre_url.com.mx/ } 
+    * {"url" : "https://www.your_mercadolibre_url.com.mx/"" } 
     * It is important to mention that the URL is associated to the specific MercadoLibre product from which you want to extract its information.
     * You can do requests using any application that allows testing of web APIs.
 * To finish the program you can run in the same terminal:
     * `docker compose down`
 
-
 ### Additional Information
 
 If you are not familiar with Docker, Python or any other tools mentioned before. You can visit the following websites:
 
-[Cloning a repository]([https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository))
+- [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
-[Get started with Docker]([https://www.docker.com/get-started/](https://www.docker.com/get-started/))
+- [Get started with Docker](https://www.docker.com/get-started/)
 
-[Download Python]([https://www.python.org/downloads/](https://www.python.org/downloads/))
+- [Download Python](https://www.python.org/downloads/)
 
-[Beautiful Soup Documentation]([https://www.crummy.com/software/BeautifulSoup/bs4/doc/](https://www.crummy.com/software/BeautifulSoup/bs4/doc/))
+- [Beautiful Soup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 
-[Requests Documentation]([https://requests.readthedocs.io/en/latest/](https://requests.readthedocs.io/en/latest/))
+- [Requests Documentation](https://requests.readthedocs.io/en/latest/)
 
-[Flask Documentation]([https://flask.palletsprojects.com/en/3.0.x/](https://flask.palletsprojects.com/en/3.0.x/))
-
+- [Flask Documentation](https://flask.palletsprojects.com/en/3.0.x/)
 
 ### **Functions/Methods**
 
 For debugging or modification of the program we share with you the functionality of each of the methods inside our class.
-
-
 
 * **init()**
 
@@ -100,7 +89,7 @@ For debugging or modification of the program we share with you the functionality
    - Scrapes the average rating of the product. Takes in the URL and returns the average rating as a string.
 
 
-      If there are no ratings, it returns None.
+​      If there are no ratings, it returns None.
 
 
 
@@ -136,13 +125,12 @@ For debugging or modification of the program we share with you the functionality
    - This function writes the data from soup (BeautifulSoup object) into a file. It takes an URL and a filename, and writes the complete HTML text of the webpage into a file.
 
 
-      If the file already exists, it does not overwrite the file.
+​      If the file already exists, it does not overwrite the file.
 
 
 ### Collaborators
 
-
-* [Francisco Chan]([https://github.com/Frank3040](https://github.com/Frank3040))
-* [Braulio Pérez]([https://github.com/BraulioPerez](https://github.com/BraulioPerez))
-    * [Youtube]([https://www.youtube.com/@BraulioPerez-Code](https://www.youtube.com/@BraulioPerez-Code))
-* [Carlos Helguera]([https://github.com/DeathSpain7](https://github.com/DeathSpain7))
+- [Francisco Chan](https://github.com/Frank3040)
+- [Braulio Pérez](https://github.com/BraulioPerez)
+    - [Youtube](https://www.youtube.com/@BraulioPerez-Code)
+- [Carlos Helguera](https://github.com/DeathSpain7)
