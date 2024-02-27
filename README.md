@@ -39,7 +39,7 @@ ws_MercadoLibre is a Python-based web scraping tool designed specifically for ex
     * `docker compose up --build`
 
 * Now you can do requests to the api by sending a json with the following format:
-    * {"url" : "https://www.your_mercadolibre_url.com.mx/"" } 
+    * {"url" : "https://www.your_mercadolibre_url.com.mx/"} 
     * It is important to mention that the URL is associated to the specific MercadoLibre product from which you want to extract its information.
     * You can do requests using any application that allows testing of web APIs.
 * To finish the program you can run in the same terminal:
