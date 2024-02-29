@@ -143,8 +143,8 @@ class ItemDataScraper:
                     "provider": self.provider_scrap(),
                     "description": self.description_scrap() 
                     }
-        # with open(f"{title}.json", "w") as outfile: 
-        #     json.dump(result, outfile)
+        with open(f"{title}.json", "w") as outfile: 
+            json.dump(result, outfile)
         
         return result
 
@@ -160,10 +160,10 @@ class ItemDataScraper:
 # solo se asigna el url a una variable para que sea mas facil de manipular y testear
 # se crea el onjeto
 # #se ejecuta el metodo data_scrap en el objeto calculando el tiempo que tarda y se imprime el tiempo total de ejecucion
-url = "https://articulo.mercadolibre.com.mx/MLM-1328094335-pc-gamer-arcoteck-ryzen-5-5600g-16gb-ssd-480gb-gabinete-rgb-_JM#position=55&search_layout=stack&type=item&tracking_id=c09b0ff0-2931-4c70-85f2-86b3369f719b"
-
-obj = ItemDataScraper(url)
-start = time.time() 
-obj.data_scrap()
-end = time.time()
-print(f"tardó {(end-start)} segundos")
+if __name__ == "__main__":
+    url = "https://www.mercadolibre.com.mx/pantalla-lg-uhd-ai-thinq-70-4k-smart-tv-70ur8750psa/p/MLM25578429#polycard_client=recommendations_home_navigation-recommendations&reco_backend=machinalis-homes-univb&reco_client=home_navigation-recommendations&reco_item_pos=1&reco_backend_type=function&reco_id=08b6a20a-bf37-44d3-bdf2-5def1ca3c2fb&wid=MLM2026818911&sid=recos&c_id=/home/navigation-recommendations/element&c_uid=9b918775-5a7a-42b7-8708-286459a89f29"
+    obj = ItemDataScraper(url)
+    start = time.time() 
+    obj.data_scrap()
+    end = time.time()
+    print(f"tardó {(end-start)} segundos")
