@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, session, jsonify
 import os
-from scripts.item_data_scraper import ItemDataScraper
+from item_data_scraper import ItemDataScraper
 
 
 
@@ -35,5 +35,5 @@ def get_info_pages():
 
 
 if __name__ == '__main__':
-    #app.run(host="0.0.0.0", port="5000")
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port="6000")
+    # app.run(debug=True)
