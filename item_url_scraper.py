@@ -4,18 +4,14 @@ import re
 
 class ItemUrlScraper:
     def __init__(self, item):
-        self.item = item
+        self.item = item.replace(" ","-")
+        self.url = f"https://listado.mercadolibre.com.mx/{self.item}_Desde_01_NoIndex_True"
+        self.urls = []
         self.request = None
         self.html = None
-        self.urls = []
-        
-    def create_search_link(self):
-        print("creando links de búsqueda")
-        item = self.item.replace(" ", "-")
-        return f"https://listado.mercadolibre.com.mx/{item}_Desde_01_NoIndex_True"
     
-    def get_item_urls(self, url:str):
-        self.request = requests.get(url)
+    def get_item_urls(self):
+        self.request = requests.get(self.url)
         print(self.request.status_code)
         if self.request.status_code == 200:
             self.html = BeautifulSoup(self.request.content, "html.parser", from_encoding="utf-8")
@@ -27,22 +23,24 @@ class ItemUrlScraper:
         # return list of urls
         
         if self.html is not None:  # Check if HTML was successfully parsed
-            hrefs = self.html.select("div.ui-search-layout div.ui-search-item__group a")
+            
+            hrefs = self.html.select("div.ui-search-main ol.ui-search-layout li div.ui-search-item__group a[class*='ui-search-item__group__element ui-search-link__title-card ui-search-link']")
+            if len(hrefs) == 0:
+                hrefs = self.html.select("div.ui-search-layout div.ui-search-item__group a")
+            
             for item in hrefs:
                 self.urls.append(item.get("href"))
-            print(self.urls)
             return self.urls
         else:
             print("Error: Failed to parse HTML content")
     
 if __name__ == "__main__":
     
-    obj = ItemUrlScraper("laptop")
+    obj = ItemUrlScraper("control remoto")
 
-    url1 = obj.create_search_link()
-    list = obj.get_item_urls(url1)
+    list = obj.get_item_urls()
 
-    print(url1)
+    print(len(list))
     print(list)
     
 
